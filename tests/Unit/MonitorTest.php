@@ -6,12 +6,19 @@ namespace Tests\Unit;
 
 use InvalidArgumentException;
 use LogicException;
-use Naf\Monitoring\{Measurement, MetricDefinition, MetricType, Monitor};
-use Naf\Monitoring\Exporters\{CompositeExporter, InMemoryExporter, NullExporter};
+use Naf\Monitoring\Exporters\CompositeExporter;
+use Naf\Monitoring\Exporters\InMemoryExporter;
+use Naf\Monitoring\Exporters\NullExporter;
+use Naf\Monitoring\Measurement;
+use Naf\Monitoring\MetricDefinition;
+use Naf\Monitoring\MetricType;
+use Naf\Monitoring\Monitor;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
-use Tests\Fixtures\{FailingExporter, RecordingLogExporter};
+use stdClass;
+use Tests\Fixtures\FailingExporter;
+use Tests\Fixtures\RecordingLogExporter;
 
 final class MonitorTest extends TestCase
 {
@@ -48,7 +55,7 @@ final class MonitorTest extends TestCase
     {
         $exporter = new FailingExporter();
         $monitor  = new Monitor($exporter, [new MetricDefinition('duration', MetricType::Histogram, 'ms')], batchSize: 1);
-        $result   = new \stdClass();
+        $result   = new stdClass();
 
         self::assertSame($result, $monitor->metric('duration')->measure(fn() => $result));
 
@@ -97,11 +104,14 @@ final class MonitorTest extends TestCase
         $good     = new InMemoryExporter();
         $logs     = new RecordingLogExporter();
         $problems = [];
-        $monitor  = new Monitor(new CompositeExporter([$bad, $good]), logExporter: $logs,
+        $monitor  = new Monitor(
+            new CompositeExporter([$bad, $good]),
+            logExporter: $logs,
             onError: static function ($error, $signal) use (&$problems): void {
                 $problems[] = [$error->getMessage(), $signal];
                 throw new RuntimeException('Diagnostic also failed');
-            });
+            },
+        );
 
         $monitor->metric('logs.total', ['level' => 'error'])->increment();
         $monitor->recordLog('error', 'Problem', []);
@@ -181,8 +191,8 @@ final class MonitorTest extends TestCase
     {
         return [
             [['level' => "error\nother:1|c"]], [['level' => 'a,b']], [['level' => 'a:b']],
-            [['level' => '']], [['level' => str_repeat('a', 81)]], [['level' => 1.2]],
-            [['level' => []]], [[0 => 'error']], [['bad|key' => 'error']],
+            [['level' => '']], [['level'                 => str_repeat('a', 81)]], [['level' => 1.2]],
+            [['level' => []]], [[0                       => 'error']], [['bad|key' => 'error']],
         ];
     }
 

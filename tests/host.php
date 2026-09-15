@@ -2,11 +2,16 @@
 
 declare(strict_types=1);
 
-use Naf\Monitoring\{LogExporterInterface, MetricExporterInterface, Monitor, MonitoringLogger};
 use Naf\Monitoring\Exporters\InMemoryExporter;
-use Psr\Log\LoggerInterface;
+use Naf\Monitoring\LogExporterInterface;
+use Naf\Monitoring\MetricExporterInterface;
+use Naf\Monitoring\Monitor;
+use Naf\Monitoring\MonitoringLogger;
 use Tests\Fixtures\RecordingLogExporter;
-use function Naf\{app, config, log};
+
+use function Naf\app;
+use function Naf\config;
+use function Naf\log;
 use function Naf\Monitoring\monitor;
 
 require __DIR__ . '/support.php';
@@ -19,19 +24,19 @@ define('BASE_PATH', $host);
 
 try {
     file_put_contents($host . '/app/config.php', <<<'CONFIG'
-<?php
-use Naf\Monitoring\Exporters\InMemoryExporter;
-return ['monitoring' => [
-    'exporter' => InMemoryExporter::class,
-    'labels' => ['service' => 'shop'],
-    'logging' => ['enabled' => true, 'min_level' => 'error'],
-    'metrics' => [
-        'orders.created' => ['type' => 'counter', 'labels' => ['channel']],
-        'queue.depth' => ['type' => 'gauge'],
-        'checkout.duration' => ['type' => 'histogram', 'unit' => 's'],
-    ],
-]];
-CONFIG);
+    <?php
+    use Naf\Monitoring\Exporters\InMemoryExporter;
+    return ['monitoring' => [
+        'exporter' => InMemoryExporter::class,
+        'labels' => ['service' => 'shop'],
+        'logging' => ['enabled' => true, 'min_level' => 'error'],
+        'metrics' => [
+            'orders.created' => ['type' => 'counter', 'labels' => ['channel']],
+            'queue.depth' => ['type' => 'gauge'],
+            'checkout.duration' => ['type' => 'histogram', 'unit' => 's'],
+        ],
+    ]];
+    CONFIG);
 
     require $autoload;
     require_once __DIR__ . '/Fixtures/RecordingLogExporter.php';
@@ -42,7 +47,7 @@ CONFIG);
     check(config('monitoring:batch_size') === 256, 'Plugin defaults did not merge.');
     check(config('monitoring:http') === false, 'HTTP instrumentation should be opt-in.');
 
-    $container = app()->container();
+    $container  = app()->container();
     $configured = $container->get(MetricExporterInterface::class);
     check($configured instanceof InMemoryExporter, 'Configured exporter was not created by NAF DI.');
 

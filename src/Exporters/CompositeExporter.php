@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Naf\Monitoring\Exporters;
 
 use InvalidArgumentException;
-use Naf\Monitoring\{MetricDefinition, MetricExporterInterface};
+use Naf\Monitoring\MetricDefinition;
+use Naf\Monitoring\MetricExporterInterface;
 use RuntimeException;
 use Throwable;
 

@@ -36,3 +36,7 @@ Run `composer test` and `composer validate --strict`. No analyse script exists.
 Tests include real loopback UDP and a running NAF HTTP host. Never send test data
 to external collectors. CI covers PHP 8.3, 8.4 and 8.5; keep runtime syntax and
 dependencies compatible with that floor.
+
+Follow the shared [PHP code style](https://github.com/nafphp/docs/blob/main/CODE_STYLE.md)
+and `.php-cs-fixer.dist.php`. Run `composer style:check`; `composer style:fix` applies the rules.
+Keep logical steps and local names readable, preserving public signatures and template output.

@@ -23,7 +23,7 @@ function receiveMetrics($server): array
     $lines = [];
 
     do {
-        $read = [$server];
+        $read  = [$server];
         $write = $except = [];
         $ready = stream_select($read, $write, $except, 0, 150000);
 
@@ -54,16 +54,16 @@ try {
 
         $environment = array_merge(getenv(), [
             // Published framework 0.2.3 installs its global error handler in dev.
-            'APP_ENV' => 'dev',
-            'MONITORING_TEST_PORT' => (string) $udpPort,
-            'MONITORING_TEST_AUTOLOAD' => $autoload,
-            'MONITORING_TEST_FAILURE' => $failureMode ? '1' : '0',
+            'APP_ENV'                          => 'dev',
+            'MONITORING_TEST_PORT'             => (string) $udpPort,
+            'MONITORING_TEST_AUTOLOAD'         => $autoload,
+            'MONITORING_TEST_FAILURE'          => $failureMode ? '1' : '0',
             'MONITORING_TEST_FAILING_EXPORTER' => __DIR__ . '/Fixtures/FailingExporter.php',
         ]);
 
         // Inherit a working PHP INI. -n is propagated when the parent was started with -n.
         $phpOptions = php_ini_loaded_file() === false ? ['-n'] : ['-c', php_ini_loaded_file()];
-        $process = proc_open([PHP_BINARY, ...$phpOptions, '-S', $address, '-t', $host . '/public'], [
+        $process    = proc_open([PHP_BINARY, ...$phpOptions, '-S', $address, '-t', $host . '/public'], [
             0 => ['pipe', 'r'],
             1 => ['file', $host . '/server.log', 'a'],
             2 => ['file', $host . '/server.log', 'a'],
@@ -88,11 +88,11 @@ try {
         check($ready, 'HTTP host did not start: ' . file_get_contents($host . '/server.log'));
 
         $cases = $failureMode ? ['/ok/7' => [200, 'orders.show']] : [
-            '/ok/7' => [200, 'orders.show'],
-            '/error' => [500, 'failure'],
-            '/missing' => [404, 'unmatched'],
-            '/late' => [200, 'late'],
-            '/changed' => [202, 'changed'],
+            '/ok/7'         => [200, 'orders.show'],
+            '/error'        => [500, 'failure'],
+            '/missing'      => [404, 'unmatched'],
+            '/late'         => [200, 'late'],
+            '/changed'      => [202, 'changed'],
             '/header-error' => [500, 'header-error'],
         ];
 
@@ -141,14 +141,14 @@ try {
     check(str_contains(file_get_contents($host . '/server.log'), 'NAF monitoring metrics export failed'), 'Exporter failure was not diagnosed.');
 
     $environment['MONITORING_TEST_FAILURE'] = '0';
-    $environment['MONITORING_TEST_HOST'] = $host;
-    $process = proc_open([PHP_BINARY, ...$phpOptions, __DIR__ . '/Fixtures/cli.php'], [
+    $environment['MONITORING_TEST_HOST']    = $host;
+    $process                                = proc_open([PHP_BINARY, ...$phpOptions, __DIR__ . '/Fixtures/cli.php'], [
         0 => ['pipe', 'r'], 1 => ['file', $host . '/cli.log', 'a'], 2 => ['file', $host . '/cli.log', 'a'],
     ], $pipes, $host, $environment);
     check(is_resource($process), 'Could not start CLI host.');
     fclose($pipes[0]);
     $exitCode = proc_close($process);
-    $process = null;
+    $process  = null;
     check($exitCode === 0, 'CLI host failed: ' . file_get_contents($host . '/cli.log'));
     check(receiveMetrics($server) === ['orders.created:1|c|#channel:cli'], 'CLI shutdown lost or duplicated pending metrics.');
 

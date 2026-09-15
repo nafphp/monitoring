@@ -5,8 +5,12 @@ declare(strict_types=1);
 namespace Naf\Monitoring\Exporters;
 
 use InvalidArgumentException;
-use Naf\Monitoring\{Measurement, MetricDefinition, MetricExporterInterface, MetricType};
-use Naf\Monitoring\Transport\{DatagramTransportInterface, UdpTransport};
+use Naf\Monitoring\Measurement;
+use Naf\Monitoring\MetricDefinition;
+use Naf\Monitoring\MetricExporterInterface;
+use Naf\Monitoring\MetricType;
+use Naf\Monitoring\Transport\DatagramTransportInterface;
+use Naf\Monitoring\Transport\UdpTransport;
 use RuntimeException;
 
 final class StatsDExporter implements MetricExporterInterface
@@ -84,8 +88,8 @@ final class StatsDExporter implements MetricExporterInterface
         $tags  = '';
         $value = $measurement->value;
         $type  = match ($definition->type) {
-            MetricType::Counter => 'c',
-            MetricType::Gauge => 'g',
+            MetricType::Counter   => 'c',
+            MetricType::Gauge     => 'g',
             MetricType::Histogram => $this->protocol === 'dogstatsd' ? 'h' : 'ms',
         };
 

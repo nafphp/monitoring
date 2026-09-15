@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Naf\Monitoring\Exporters;
 
 use InvalidArgumentException;
-use Naf\Monitoring\{Measurement, MetricDefinition, MetricExporterInterface};
+use Naf\Monitoring\Measurement;
+use Naf\Monitoring\MetricDefinition;
+use Naf\Monitoring\MetricExporterInterface;
 use OverflowException;
 
 final class InMemoryExporter implements MetricExporterInterface
@@ -20,7 +22,9 @@ final class InMemoryExporter implements MetricExporterInterface
         }
     }
 
-    public function validate(MetricDefinition $definition): void {}
+    public function validate(MetricDefinition $definition): void
+    {
+    }
 
     public function export(array $measurements): void
     {

@@ -4,19 +4,22 @@ declare(strict_types=1);
 
 namespace Naf\Monitoring;
 
-use Psr\Log\{AbstractLogger, InvalidArgumentException, LoggerInterface, LogLevel};
+use Psr\Log\AbstractLogger;
+use Psr\Log\InvalidArgumentException;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 use Stringable;
 
 final class MonitoringLogger extends AbstractLogger
 {
     private const array LEVELS = [
-        LogLevel::DEBUG => 0,
-        LogLevel::INFO => 1,
-        LogLevel::NOTICE => 2,
-        LogLevel::WARNING => 3,
-        LogLevel::ERROR => 4,
-        LogLevel::CRITICAL => 5,
-        LogLevel::ALERT => 6,
+        LogLevel::DEBUG     => 0,
+        LogLevel::INFO      => 1,
+        LogLevel::NOTICE    => 2,
+        LogLevel::WARNING   => 3,
+        LogLevel::ERROR     => 4,
+        LogLevel::CRITICAL  => 5,
+        LogLevel::ALERT     => 6,
         LogLevel::EMERGENCY => 7,
     ];
 

@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use InvalidArgumentException;
-use Naf\Monitoring\{Measurement, MetricDefinition, MetricType, Monitor};
 use Naf\Monitoring\Exporters\StatsDExporter;
+use Naf\Monitoring\Measurement;
+use Naf\Monitoring\MetricDefinition;
+use Naf\Monitoring\MetricType;
+use Naf\Monitoring\Monitor;
 use Naf\Monitoring\Transport\UdpTransport;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
@@ -109,7 +112,7 @@ final class StatsDExporterTest extends TestCase
         self::assertIsResource($server, $message);
 
         try {
-            $port = (int) substr(strrchr(stream_socket_get_name($server, false), ':'), 1);
+            $port     = (int) substr(strrchr(stream_socket_get_name($server, false), ':'), 1);
             $exporter = new StatsDExporter(port: $port, protocol: 'dogstatsd');
             $exporter->export([new Measurement(new MetricDefinition('orders', MetricType::Counter), 1, ['channel' => 'web'])]);
 

@@ -15,5 +15,6 @@ final readonly class LogRecord
         public array $context,
         public array $labels,
         public float $timestamp,
-    ) {}
+    ) {
+    }
 }

@@ -3,10 +3,21 @@
 declare(strict_types=1);
 
 use Naf\Core\Event;
-use Naf\Monitoring\{HttpMetrics, LogExporterInterface, MetricDefinition, MetricExporterInterface, MetricType, Monitor, MonitoringLogger};
-use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
+use Naf\Monitoring\HttpMetrics;
+use Naf\Monitoring\LogExporterInterface;
+use Naf\Monitoring\MetricDefinition;
+use Naf\Monitoring\MetricExporterInterface;
+use Naf\Monitoring\MetricType;
+use Naf\Monitoring\Monitor;
+use Naf\Monitoring\MonitoringLogger;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use function Naf\{app, config, event, route};
+
+use function Naf\app;
+use function Naf\config;
+use function Naf\event;
+use function Naf\route;
 
 $container = app()->container();
 

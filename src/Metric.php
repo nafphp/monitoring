@@ -13,7 +13,8 @@ final readonly class Metric
         private Monitor $monitor,
         private MetricDefinition $definition,
         private array $labels,
-    ) {}
+    ) {
+    }
 
     public function increment(int|float $amount = 1): void
     {

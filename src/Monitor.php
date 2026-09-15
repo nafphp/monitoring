@@ -17,8 +17,8 @@ final class Monitor
     /** @var list<Measurement> */
     private array $measurements = [];
     /** @var list<LogRecord> */
-    private array $logs = [];
-    private bool $flushing = false;
+    private array $logs        = [];
+    private bool $flushing     = false;
     private int $failedBatches = 0;
 
     /**
@@ -147,7 +147,8 @@ final class Monitor
             ++$this->failedBatches;
 
             try {
-                ($this->onError ?? static function (): void {})($error, $signal);
+                ($this->onError ?? static function (): void {
+                })($error, $signal);
             } catch (Throwable) {
                 // A diagnostic failure must not replace the application's result either.
             }

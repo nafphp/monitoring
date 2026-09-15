@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use Naf\Monitoring\{LogExporterInterface, Monitor, MonitoringLogger};
 use Naf\Monitoring\Exporters\InMemoryExporter;
+use Naf\Monitoring\LogExporterInterface;
+use Naf\Monitoring\Monitor;
+use Naf\Monitoring\MonitoringLogger;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\InvalidArgumentException;
 use RuntimeException;
-use Tests\Fixtures\{RecordingLogExporter, RecordingLogger};
+use Tests\Fixtures\RecordingLogExporter;
+use Tests\Fixtures\RecordingLogger;
 
 final class MonitoringLoggerTest extends TestCase
 {
@@ -19,12 +22,12 @@ final class MonitoringLoggerTest extends TestCase
     #[DataProvider('thresholds')]
     public function testEveryThresholdFiltersOnlyMonitoring(string $threshold, array $expected): void
     {
-        $inner    = new RecordingLogger();
-        $metrics  = new InMemoryExporter();
-        $logs     = new RecordingLogExporter();
-        $monitor  = new Monitor($metrics, labels: ['service' => 'shop'], logExporter: $logs);
-        $logger   = new MonitoringLogger($inner, $monitor, $threshold);
-        $error    = new RuntimeException('Original exception');
+        $inner   = new RecordingLogger();
+        $metrics = new InMemoryExporter();
+        $logs    = new RecordingLogExporter();
+        $monitor = new Monitor($metrics, labels: ['service' => 'shop'], logExporter: $logs);
+        $logger  = new MonitoringLogger($inner, $monitor, $threshold);
+        $error   = new RuntimeException('Original exception');
 
         foreach (self::LEVELS as $level) {
             $logger->log($level, 'Order {id} failed', ['id' => 42, 'exception' => $error]);
@@ -86,7 +89,7 @@ final class MonitoringLoggerTest extends TestCase
         $monitor = new Monitor($metrics, logExporter: $exporter, onError: static function () use (&$logger): void {
             $logger->error('Diagnostic');
         });
-        $logger = new MonitoringLogger($inner, $monitor);
+        $logger            = new MonitoringLogger($inner, $monitor);
         $exporter->logger  = $logger;
         $exporter->monitor = $monitor;
         $logger->error('Application failure');

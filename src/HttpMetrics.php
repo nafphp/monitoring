@@ -4,23 +4,26 @@ declare(strict_types=1);
 
 namespace Naf\Monitoring;
 
-use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /** @internal Captures only the HTTP cycle observed through NAF's existing events. */
 final class HttpMetrics
 {
-    private ?int $start = null;
-    private string $method = 'OTHER';
-    private string $route = 'unmatched';
-    private ?int $status = null;
+    private ?int $start     = null;
+    private string $method  = 'OTHER';
+    private string $route   = 'unmatched';
+    private ?int $status    = null;
     private bool $exception = false;
 
-    public function __construct(private readonly Monitor $monitor) {}
+    public function __construct(private readonly Monitor $monitor)
+    {
+    }
 
     public function start(ServerRequestInterface $request): void
     {
-        $this->start     = hrtime(true);
-        $this->method    = in_array($request->getMethod(), ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'CONNECT', 'TRACE'], true)
+        $this->start  = hrtime(true);
+        $this->method = in_array($request->getMethod(), ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'CONNECT', 'TRACE'], true)
             ? $request->getMethod() : 'OTHER';
         $this->route     = 'unmatched';
         $this->status    = null;

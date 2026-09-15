@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use Naf\Monitoring\{HttpMetrics, MetricDefinition, MetricExporterInterface, Monitor};
 use Naf\Monitoring\Exporters\InMemoryExporter;
-use Nyholm\Psr7\{Response, ServerRequest};
+use Naf\Monitoring\HttpMetrics;
+use Naf\Monitoring\MetricDefinition;
+use Naf\Monitoring\MetricExporterInterface;
+use Naf\Monitoring\Monitor;
+use Nyholm\Psr7\Response;
+use Nyholm\Psr7\ServerRequest;
 use PHPUnit\Framework\TestCase;
 
 final class HttpMetricsTest extends TestCase
@@ -77,10 +81,12 @@ final class HttpMetricsTest extends TestCase
     public function testDurationIsCapturedBeforeThresholdFlushAtResponseEnd(): void
     {
         $exporter = new class implements MetricExporterInterface {
-            public ?int $exportStart = null;
+            public ?int $exportStart   = null;
             public array $measurements = [];
 
-            public function validate(MetricDefinition $definition): void {}
+            public function validate(MetricDefinition $definition): void
+            {
+            }
 
             public function export(array $measurements): void
             {

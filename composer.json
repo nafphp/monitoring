@@ -9,12 +9,17 @@
     "psr/log": "^3.0"
   },
   "autoload": {
-    "psr-4": { "Naf\\Monitoring\\": "src/" }
+    "psr-4": {
+      "Naf\\Monitoring\\": "src/"
+    }
   },
   "autoload-dev": {
-    "psr-4": { "Tests\\": "tests/" }
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
   },
   "require-dev": {
+    "friendsofphp/php-cs-fixer": "3.95.25",
     "phpunit/phpunit": "^11.5 || ^12.1"
   },
   "scripts": {
@@ -22,6 +27,13 @@
       "@php vendor/bin/phpunit --colors=always",
       "@php tests/host.php",
       "@php tests/http.php"
-    ]
+    ],
+    "style:check": "@php vendor/bin/php-cs-fixer fix --dry-run --diff",
+    "style:fix": "@php vendor/bin/php-cs-fixer fix"
+  },
+  "config": {
+    "platform": {
+      "php": "8.3.0"
+    }
   }
 }
