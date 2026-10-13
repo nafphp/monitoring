@@ -6,7 +6,13 @@ title: Monitoring
 
 This guide describes the **unreleased `naf/monitoring` 0.1.0 development preview**.
 It requires PHP 8.3+ and the published `naf/framework` 0.2.3 or newer. Install the
-review branch in a disposable host as described in [the README](../README.md).
+review branch in a disposable host:
+
+```bash
+composer config repositories.naf-monitoring vcs https://github.com/nafphp/monitoring
+composer require 'naf/monitoring:dev-v0.1.0-rc'
+```
+
 Stable installation instructions and the shared documentation inventory will be
 published only after the package is available on Packagist.
 
@@ -317,4 +323,5 @@ full. Through `Monitor`, that failure is counted and the failed batch is dropped
 The package suite tests these APIs, the PSR-3 severity matrix, independent export
 failures, protocol bytes, bounds and label isolation. Real loopback UDP and HTTP/CLI
 tests verify Composer discovery, host overrides, response behavior and flushing
-against the published framework. See the README for the actual commands.
+against the published framework. See [AGENTS.md](https://github.com/nafphp/monitoring/blob/main/AGENTS.md)
+for the development commands.
