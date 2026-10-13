@@ -6,8 +6,9 @@ Read [composer.json](composer.json), [README.md](README.md), the
 In the NAF workspace those shared documents are in sibling `docs/`.
 Preserve others' work. Code changes use a versioned RC branch, are tested,
 committed and pushed, and are merged by the maintainer. Do not publish a release
-without a release request. Keep unreleased user guides in this package until
-Packagist availability permits publication to the shared documentation.
+without a release request. Prepare unreleased user guides in `nafphp/docs/drafts/`
+and publish them after verifying the matching release on Packagist. The existing
+`docs/monitoring.md` is the source for that first-release guide.
 
 This PHP 8.3+ Composer `naf-plugin` supplies `Naf\Monitoring\monitor()`.
 Read `bootstrap.php`, `src/config.php`, `src/Monitor.php`, `src/Metric.php` and
